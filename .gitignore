@@ -28,3 +28,5 @@
 *.app
 /library_for_delivery/.idea
 /library_for_delivery/!build
+/use_library/!build
+/use_library/.idea
