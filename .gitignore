@@ -26,3 +26,5 @@
 *.exe
 *.out
 *.app
+/library_for_delivery/.idea
+/library_for_delivery/!build
