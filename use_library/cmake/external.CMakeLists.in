@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 2.8.2)
+project(${BIN_DELIVERY_ARGS_PROJ}-external NONE)
+
+include(ExternalProject)
+
+ExternalProject_Add(${BIN_DELIVERY_ARGS_PROJ}-external
+        URL "${BIN_DELIVERY_ARGS_URL}"
+        PREFIX "${CMAKE_BINARY_DIR}/${BIN_DELIVERY_ARGS_PROJ}"
+        INSTALL_DIR "${CMAKE_BINARY_DIR}"
+        BINARY_DIR "${CMAKE_BINARY_DIR}/${BIN_DELIVERY_ARGS_PROJ}/bin"
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}
+        CONFIGURE_COMMAND ""
+        PATCH_COMMAND ""
+        INSTALL_COMMAND ""
+        BUILD_COMMAND ""
+        UPDATE_COMMAND ""
+        TEST_COMMAND ""
+        )
+
+

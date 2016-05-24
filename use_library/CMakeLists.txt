@@ -16,32 +16,36 @@ set_target_properties(use_library PROPERTIES
         CXX_STANDARD_REQUIRED YES
         )
 
-# bad version. first try
-include(ExternalProject)
+include(cmake/binary_delivery.cmake)
 
-link_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
-ExternalProject_Add(lib_external
-    URL https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/msvc2013.zip
-    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/library
-    INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}
-)
-
-add_library(lib_static STATIC IMPORTED GLOBAL)
-add_dependencies(lib_static lib_external)
-if(MSVC)
-    set_target_properties(lib_static PROPERTIES
-                         IMPORTED_LOCATION_DEBUG ${CMAKE_CURRENT_BINARY_DIR}/lib/library_for_deliveryd.lib
-                         IMPORTED_LOCATION_MINSIZEREL ${CMAKE_CURRENT_BINARY_DIR}/lib/library_for_delivery.lib
-                         IMPORTED_LOCATION_RELEASE ${CMAKE_CURRENT_BINARY_DIR}/lib/library_for_delivery.lib
-                         IMPORTED_LOCATION_RELWITHDEBINFO ${CMAKE_CURRENT_BINARY_DIR}/lib/library_for_delivery.lib
-                         LINKER_LANGUAGE CXX)
+# Download lib if required
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+	set(lib_zip_name "msvc2013-x64.zip")
 else()
-    set_target_properties(lib_static PROPERTIES
-                          IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/lib/library_for_delivery.a
-                          LINKER_LANGUAGE CXX)
+	set(lib_zip_name "msvc2013-x86.zip")
 endif()
 
-target_include_directories(use_library PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include)
-target_link_libraries(use_library PRIVATE lib_static)
+binary_delivery(PROJ library_for_delivery
+		URL "https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/${lib_zip_name}")
+
+link_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
+find_package(library_for_delivery)
+
+target_include_directories(use_library PRIVATE ${library_for_delivery_INCLUDE_DIR})
+target_link_libraries(use_library PRIVATE library_for_delivery)
+
+# bad version. first try
+#include(ExternalProject)
+
+#ExternalProject_Add(lib_external
+#        URL https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/${lib_zip_name}
+#        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/library
+#        INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
+#        CONFIGURE_COMMAND ""
+#        PATCH_COMMAND ""
+#        BUILD_COMMAND ""
+#        UPDATE_COMMAND ""
+#        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}
+#)
+
 
