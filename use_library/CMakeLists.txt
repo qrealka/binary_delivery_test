@@ -20,32 +20,17 @@ include(cmake/binary_delivery.cmake)
 
 # Download lib if required
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(lib_zip_name "msvc2013-x64.zip")
+	set(lib_zip_name "msvc2013x64.zip")
 else()
-	set(lib_zip_name "msvc2013-x86.zip")
+	set(lib_zip_name "msvc2013x86.zip")
 endif()
 
 binary_delivery(PROJ library_for_delivery
 		URL "https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/${lib_zip_name}")
 
-link_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
-find_package(library_for_delivery)
+#link_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
+#find_package(library_for_delivery REQUIRED)
 
-target_include_directories(use_library PRIVATE ${library_for_delivery_INCLUDE_DIR})
+#target_include_directories(use_library PRIVATE ${library_for_delivery_INCLUDE_DIR})
 target_link_libraries(use_library PRIVATE library_for_delivery)
-
-# bad version. first try
-#include(ExternalProject)
-
-#ExternalProject_Add(lib_external
-#        URL https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/${lib_zip_name}
-#        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external/library
-#        INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
-#        CONFIGURE_COMMAND ""
-#        PATCH_COMMAND ""
-#        BUILD_COMMAND ""
-#        UPDATE_COMMAND ""
-#        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}
-#)
-
 

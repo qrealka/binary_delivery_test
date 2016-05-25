@@ -7,9 +7,9 @@ function(binary_delivery)
         PROJ
         URL
         PREFIX
-        INSTALL_DIR
         DOWNLOAD_DIR
         # Prevent it
+        INSTALL_DIR
         CMAKE_ARGS
         CONFIGURE_COMMAND
         PATCH_COMMAND
@@ -25,23 +25,20 @@ function(binary_delivery)
         set(BIN_DELIVERY_ARGS_PREFIX "${CMAKE_BINARY_DIR}")
     endif()
 
-    if (NOT BIN_DELIVERY_ARGS_INSTALL_DIR)
-        set(BIN_DELIVERY_ARGS_INSTALL_DIR "${CMAKE_BINARY_DIR}")
-    endif()
-
     if (NOT BIN_DELIVERY_ARGS_DOWNLOAD_DIR)
-        set(BIN_DELIVERY_ARGS_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}/${BIN_DELIVERY_ARGS_PROJ}.tmp")
+        set(BIN_DELIVERY_ARGS_DOWNLOAD_DIR "${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ}")
     endif()
-
-    set(${BIN_DELIVERY_ARGS_PROJ}_DIR "${CMAKE_BINARY_DIR}/${BIN_DELIVERY_ARGS_PROJ}" PARENT_SCOPE)
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/cmake/external.CMakeLists.in"
-            "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}/CMakeLists.txt")
+            "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp/CMakeLists.txt")
 
     execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-            WORKING_DIRECTORY "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}"
+            WORKING_DIRECTORY "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp"
             )
     execute_process(COMMAND ${CMAKE_COMMAND} --build .
-            WORKING_DIRECTORY "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}"
+            WORKING_DIRECTORY "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp"
             )
+
+    set(${BIN_DELIVERY_ARGS_PROJ}_DIR "${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ}" PARENT_SCOPE)
+    include(${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ}/${BIN_DELIVERY_ARGS_PROJ}.cmake)
 endfunction()
