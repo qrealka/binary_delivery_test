@@ -19,21 +19,24 @@ set_target_properties(library_for_delivery PROPERTIES
 
 target_include_directories(library_for_delivery PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-		$<INSTALL_INTERFACE:include/library_for_delivery>)
+		$<INSTALL_INTERFACE:include>)
 
 set_target_properties(library_for_delivery
         PROPERTIES DEBUG_POSTFIX d)
 
 # INSTALL
-install(FILES ${library_for_delivery_SOURCE_DIR}/main_lib.h   DESTINATION include/library_for_delivery)
-
-install(TARGETS library_for_delivery   
+install(TARGETS library_for_delivery
   EXPORT library_for_delivery
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
+  LIBRARY DESTINATION include
+  PUBLIC_HEADER DESTINATION include
   INCLUDES DESTINATION include
   CONFIGURATIONS Debug Release)
 
-install(FILES library_for_delivery-config.cmake DESTINATION lib)
-install(EXPORT library_for_delivery DESTINATION lib)
+install(FILES ${library_for_delivery_SOURCE_DIR}/main_lib.h  DESTINATION include)
+install(FILES library_for_delivery-config.cmake DESTINATION ".")
+install(EXPORT library_for_delivery
+        DESTINATION "."
+        EXPORT_LINK_INTERFACE_LIBRARIES
+        CONFIGURATIONS Debug Release)
