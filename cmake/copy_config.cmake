@@ -1,19 +1,8 @@
-include(CMakeParseArguments)
 
-function(copy_config)
+function(copy_config NEW_CONFIG OLD_CONFIG)
 
-    set(oneValueArgs
-        NEW_CONFIG
-        OLD_CONFIG
-        )
-        
-    set(multiValueArgs "")
-    set(options "")
-    
-    cmake_parse_arguments(COPY_CFG_ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-    string(TOUPPER ${COPY_CFG_ARGS_NEW_CONFIG} NEW_CFG)
-    string(TOUPPER ${COPY_CFG_ARGS_OLD_CONFIG} OLD_CFG)
+    string(TOUPPER ${NEW_CONFIG} NEW_CFG)
+    string(TOUPPER ${OLD_CONFIG} OLD_CFG)
 
     if(CMAKE_CONFIGURATION_TYPES)
         list(APPEND CMAKE_CONFIGURATION_TYPES ${NEW_CFG})
@@ -39,5 +28,10 @@ function(copy_config)
 	set (CMAKE_SHARED_LINKER_FLAGS_${NEW_CFG} "${CMAKE_SHARED_LINKER_FLAGS_${OLD_CFG}}"      
             CACHE STRING "Flags used by the linker during ${NEW_CFG} builds"   FORCE)
     
-endfunction()
+endfunction(copy_config)
+
+function(copy_import DST_TAGRET SRC_CONFIG DST_CONFIG)
+    
+endfunction(copy_import)
+
 
