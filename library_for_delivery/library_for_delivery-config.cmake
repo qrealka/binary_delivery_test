@@ -1,4 +1,4 @@
 # package configuration file
 
-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-include(${SELF_DIR}/library_for_delivery.cmake)
+get_filename_component(LIBRARY_FOR_DELIVERY_CMAKE "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(${LIBRARY_FOR_DELIVERY_CMAKE}/library_for_delivery.cmake)

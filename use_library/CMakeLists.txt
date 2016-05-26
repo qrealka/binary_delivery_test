@@ -28,9 +28,14 @@ endif()
 binary_delivery(PROJ library_for_delivery
 		URL "https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/${lib_zip_name}")
 
-#link_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
-#find_package(library_for_delivery REQUIRED)
+find_package(library_for_delivery REQUIRED)
 
-#target_include_directories(use_library PRIVATE ${library_for_delivery_INCLUDE_DIR})
-target_link_libraries(use_library PRIVATE library_for_delivery)
+if (library_for_delivery_FOUND)
+	message(STATUS "library_for_delivery configurations: ${library_for_delivery_CONSIDERED_CONFIGS}")
+
+	#target_include_directories(use_library PRIVATE ${library_for_delivery_INCLUDE_DIR})
+	target_link_libraries(use_library PRIVATE library_for_delivery)
+else()
+	message(FATAL_ERROR "library_for_delivery not found!")
+endif()
 

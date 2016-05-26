@@ -30,15 +30,15 @@ set_target_properties(library_for_delivery
 
 install(TARGETS library_for_delivery
   EXPORT library_for_delivery
-  RUNTIME DESTINATION ./bin
-  ARCHIVE DESTINATION ./lib
-  LIBRARY DESTINATION ./include
-  INCLUDES DESTINATION ./include
-  PUBLIC_HEADER DESTINATION ./include)
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION include
+  INCLUDES DESTINATION include
+  PUBLIC_HEADER DESTINATION include)
   
 
 install(FILES ${library_for_delivery_SOURCE_DIR}/main_lib.h  DESTINATION include)
-install(FILES library_for_delivery-config.cmake DESTINATION ".")
+install(FILES library_for_delivery-config.cmake DESTINATION cmake)
 install(EXPORT library_for_delivery
-        DESTINATION "."
+        DESTINATION cmake
         EXPORT_LINK_INTERFACE_LIBRARIES)
