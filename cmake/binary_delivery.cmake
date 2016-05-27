@@ -29,7 +29,10 @@ function(binary_delivery)
         set(BIN_DELIVERY_ARGS_DOWNLOAD_DIR "${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ}")
     endif()
 
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/cmake/external.CMakeLists.in"
+	get_filename_component(PATH_SELF "${CMAKE_CURRENT_LIST_FILE}" PATH)
+	get_filename_component(PATH_SELF "${PATH_SELF}" PATH)
+
+    configure_file("${PATH_SELF}/cmake/external.CMakeLists.in"
             "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp/CMakeLists.txt")
 
     execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .

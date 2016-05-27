@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(library_for_delivery CXX)
 
-#use it client project
-#set(CMAKE_DEBUG_POSTFIX d)
 
+
+
+# BUILD section
 # force enable C++11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,12 +22,23 @@ target_include_directories(library_for_delivery PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 		$<INSTALL_INTERFACE:include>)
 
+# we need posfix because library files copy to same directory
 set_target_properties(library_for_delivery
         PROPERTIES DEBUG_POSTFIX d)
 
-# INSTALL
-# export store only current full path name to files! Don't use it
-#export(TARGETS library_for_delivery FILE library_for_delivery.cmake)
+
+
+
+
+
+# INSTALL section
+# export store current full path name to cmake file! Don't use it:
+# export(TARGETS library_for_delivery FILE library_for_delivery.cmake)
+
+set(LIB_NAME library_for_delivery)
+configure_file(../cmake/export-config.cmake.in
+	${CMAKE_CURRENT_BINARY_DIR}/library_for_delivery-config.cmake
+	@ONLY)
 
 install(TARGETS library_for_delivery
   EXPORT library_for_delivery
@@ -38,7 +50,7 @@ install(TARGETS library_for_delivery
   
 
 install(FILES ${library_for_delivery_SOURCE_DIR}/main_lib.h  DESTINATION include)
-install(FILES library_for_delivery-config.cmake DESTINATION cmake)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/library_for_delivery-config.cmake DESTINATION cmake)
 install(EXPORT library_for_delivery
         DESTINATION cmake
         EXPORT_LINK_INTERFACE_LIBRARIES)

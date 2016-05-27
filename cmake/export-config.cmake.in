@@ -1,0 +1,4 @@
+# package configuration file
+
+get_filename_component(@LIB_NAME@_CMAKE "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(${@LIB_NAME@_CMAKE}/@LIB_NAME@.cmake)

@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(use_library)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 # force enable C++11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -16,7 +15,7 @@ set_target_properties(use_library PROPERTIES
         CXX_STANDARD_REQUIRED YES
         )
 
-include(cmake/binary_delivery.cmake)
+include(../cmake/binary_delivery.cmake)
 
 # Download lib if required
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -33,7 +32,6 @@ find_package(library_for_delivery REQUIRED)
 if (library_for_delivery_FOUND)
 	message(STATUS "library_for_delivery configurations: ${library_for_delivery_CONSIDERED_CONFIGS}")
 
-	#target_include_directories(use_library PRIVATE ${library_for_delivery_INCLUDE_DIR})
 	target_link_libraries(use_library PRIVATE library_for_delivery)
 else()
 	message(FATAL_ERROR "library_for_delivery not found!")
