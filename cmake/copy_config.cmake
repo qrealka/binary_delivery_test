@@ -30,8 +30,5 @@ function(copy_config NEW_CONFIG OLD_CONFIG)
     
 endfunction(copy_config)
 
-function(copy_import DST_TAGRET SRC_CONFIG DST_CONFIG)
-    
-endfunction(copy_import)
 
 
