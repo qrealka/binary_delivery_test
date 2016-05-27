@@ -1,10 +1,21 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
-project(use_library)
+
+project(use_library CXX)
 
 # force enable C++11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-message("Supported CPP features = ${CMAKE_CXX_COMPILE_FEATURES}")
+message(STATUS "Supported CPP features = ${CMAKE_CXX_COMPILE_FEATURES}")
+
+# remove standart configurations (just for testing)
+if (CMAKE_CONFIGURATION_TYPES)
+	list(REMOVE_ITEM CMAKE_CONFIGURATION_TYPES Release Debug)
+	list(REMOVE_DUPLICATES CMAKE_CONFIGURATION_TYPES)
+	set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" 
+		CACHE STRING "Configurations that we need" FORCE)
+endif()
+
+message(STATUS "CMAKE_CONFIGURATION_TYPES = ${CMAKE_CONFIGURATION_TYPES}")
 
 set(SOURCE_FILES main.cpp)
 add_executable(use_library ${SOURCE_FILES})
