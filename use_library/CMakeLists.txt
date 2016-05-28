@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project(use_library CXX)
 
+##########################################################################
+# CONFIG section
+#
+
 # force enable C++11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -17,6 +21,12 @@ endif()
 
 message(STATUS "CMAKE_CONFIGURATION_TYPES = ${CMAKE_CONFIGURATION_TYPES}")
 
+include(../cmake/binary_delivery.cmake)
+include(../cmake/copy_import.cmake)
+
+##########################################################################
+# BUILD section
+#
 set(SOURCE_FILES main.cpp)
 add_executable(use_library ${SOURCE_FILES})
 
@@ -26,25 +36,52 @@ set_target_properties(use_library PROPERTIES
         CXX_STANDARD_REQUIRED YES
         )
 
-include(../cmake/binary_delivery.cmake)
 
-# Download lib if required
+##########################################################################
+# IMPORT section
+#
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(lib_zip_name "msvc2013x64.zip")
+	set(lib_zip_suffix "x64")
 else()
-	set(lib_zip_name "msvc2013x86.zip")
-endif()
+	set(lib_zip_suffix "x86")
+endif() #CMAKE_SIZEOF_VOID_P
 
-binary_delivery(PROJ library_for_delivery
-		URL "https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/${lib_zip_name}")
+# Download lib 
+# command line parameter -DUSE_SHARED
+if(USE_SHARED)
 
-find_package(library_for_delivery REQUIRED)
+	# DOWNLOAD DYNAMIC LIB
+	binary_delivery(PROJ dll_for_delivery
+			URL "https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/msvc2013${lib_zip_suffix}.dll.zip")
 
-if (library_for_delivery_FOUND)
-	message(STATUS "library_for_delivery configurations: ${library_for_delivery_CONSIDERED_CONFIGS}")
+	find_package(dll_for_delivery REQUIRED)
+	copy_import(dll_for_delivery Release MinSizeRel)
 
-	target_link_libraries(use_library PRIVATE library_for_delivery)
+	if (dll_for_delivery_FOUND)
+		message(STATUS "dll_for_delivery configuration file: ${dll_for_delivery_CONSIDERED_CONFIGS}")
+
+		target_link_libraries(use_library PRIVATE dll_for_delivery)
+	else()
+		message(FATAL_ERROR "dll_for_delivery not found!")
+	endif() #dll_for_delivery_FOUND
+	
 else()
-	message(FATAL_ERROR "library_for_delivery not found!")
-endif()
+
+	# DOWNLOAD STATIC LIB 	
+	binary_delivery(PROJ library_for_delivery
+			URL "https://github.com/qrealka/binary_delivery_test/releases/download/1.0.1/msvc2013${lib_zip_suffix}.zip")
+
+	find_package(library_for_delivery REQUIRED)
+	copy_import(library_for_delivery Release MinSizeRel)
+
+	if (library_for_delivery_FOUND)
+		message(STATUS "library_for_delivery configuration file: ${library_for_delivery_CONSIDERED_CONFIGS}")
+
+		target_link_libraries(use_library PRIVATE library_for_delivery)
+	else()
+		message(FATAL_ERROR "library_for_delivery not found!")
+	endif() #library_for_delivery_FOUND
+	
+endif() #USE_SHARED
+
 
