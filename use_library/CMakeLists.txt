@@ -47,7 +47,7 @@ else()
 endif() #CMAKE_SIZEOF_VOID_P
 
 # Download lib 
-# command line parameter -DUSE_SHARED
+# command line parameter -D USE_SHARED=1
 if(USE_SHARED)
 
 	# DOWNLOAD DYNAMIC LIB
@@ -60,7 +60,11 @@ if(USE_SHARED)
 	if (dll_for_delivery_FOUND)
 		message(STATUS "dll_for_delivery configuration file: ${dll_for_delivery_CONSIDERED_CONFIGS}")
 
+		target_compile_definitions(use_library PRIVATE "USE_SHARED")
 		target_link_libraries(use_library PRIVATE dll_for_delivery)
+		add_custom_command(TARGET use_library POST_BUILD	
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:dll_for_delivery> $<TARGET_FILE_DIR:use_library>
+		)
 	else()
 		message(FATAL_ERROR "dll_for_delivery not found!")
 	endif() #dll_for_delivery_FOUND

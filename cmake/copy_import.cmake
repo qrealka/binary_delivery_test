@@ -16,5 +16,6 @@ function(copy_import import_lib config_src config_dst)
     set_target_properties(${import_lib} PROPERTIES
         IMPORTED_LINK_INTERFACE_LANGUAGES_${NEW_CFG} "${src_interface}"
         IMPORTED_LOCATION_${NEW_CFG} "${src_lib}"
+		IMPORTED_IMPLIB_${NEW_CFG} "${src_imp}"
     )
 endfunction(copy_import)
