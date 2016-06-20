@@ -32,17 +32,21 @@ function(binary_delivery)
 	get_filename_component(PATH_SELF "${CMAKE_CURRENT_LIST_FILE}" PATH)
 	get_filename_component(PATH_SELF "${PATH_SELF}" PATH)
 
-    configure_file("${PATH_SELF}/cmake/external.CMakeLists.in"
-            "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp/CMakeLists.txt")
+	if (NOT EXISTS "${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ}/cmake")
+        configure_file("${PATH_SELF}/cmake/external.CMakeLists.in"
+                "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp/CMakeLists.txt")
 
-    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-            WORKING_DIRECTORY "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp"
-            )
-    execute_process(COMMAND ${CMAKE_COMMAND} --build .
-            WORKING_DIRECTORY "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp"
-            )
+        execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+                WORKING_DIRECTORY "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp"
+                )
+        execute_process(COMMAND ${CMAKE_COMMAND} --build .
+                WORKING_DIRECTORY "${BIN_DELIVERY_ARGS_DOWNLOAD_DIR}.tmp"
+                )
 
+        message(STATUS "${PROJ} dir: ${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ}")
+    else()
+        message(STATUS "${PROJ} dir: ${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ} already exists")
+	endif()
+    
     set(${BIN_DELIVERY_ARGS_PROJ}_DIR "${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ}/cmake" PARENT_SCOPE)
-	message(STATUS "${PROJ} dir: ${BIN_DELIVERY_ARGS_PREFIX}/${BIN_DELIVERY_ARGS_PROJ}")
-
 endfunction()
